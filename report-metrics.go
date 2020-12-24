@@ -31,7 +31,11 @@ func report(u Usage){
 }
 
 func main() {
-	k8s, _ = discovery.NewK8s()
+	k8s, err := discovery.NewK8s()
+	if err != nil{
+		fmt.Println(err)
+		panic(fmt.Sprintf("unable to create k8s object: %w\n", err))
+	}
 	namespace := os.Getenv("METRICS_MONITOR_K8S_NAMESPACE")
 	interval := os.Getenv("METRICS_MONITOR_INTERVAL") // interval in seconds
 	if len(interval) == 0{

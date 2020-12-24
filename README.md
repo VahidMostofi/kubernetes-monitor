@@ -2,9 +2,19 @@
 kubectl proxy --port=8088 &
 ```
 ```
-docker run --env-file .env --net host -v $PWD/telegraf.conf:/etc/telegraf/telegraf.conf:ro telegraf
-
+docker run --rm --env-file .env --net host -v $PWD/telegraf.conf:/etc/telegraf/telegraf.conf:ro -v $PWD/report-metrics.out:/report-metrics.out -v $PWD/kube-configs:/root/.kube telegraf
 ```
+
+Generate emtpy telegraf.conf file
+```
+docker run --rm telegraf telegraf config > telegraf.conf
+```
+
+contents of ```kube-configs``` directory:
+- ca.crt
+- client.crt
+- client.key
+- config -> template for this is available
 
 ### Get Pods of a service:
 ```

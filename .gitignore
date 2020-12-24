@@ -1,2 +1,4 @@
 .env
 report-metrics.out
+kube-config
+kube-configs
