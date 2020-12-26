@@ -43,3 +43,5 @@ To use this you also need to:
 - Add new Filter By Name
 - Unselect stuff you don't need
 - Select stuff you need
+
+The advantage of this approach in comparision with the other approach is that here we can deploy it without needing to have a deamonset .
