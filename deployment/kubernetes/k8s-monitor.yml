@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-monitor-deployment
+spec:
+  selector:
+    matchLabels:
+      app: k8s-monitor
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: k8s-monitor
+    spec:
+      containers:
+        - image: vahidmostofi/telegraf-metrics-reporter:latest
+          name: telegraf
+          volumeMounts:
+            - mountPath: /etc/telegraf/telegraf.conf
+              name: k8s-monitor-config
+              subPath: telegraf.conf
+              readOnly: true
+          envFrom:
+            - secretRef:
+                name: k8s-monitor-secrets
+      volumes:
+        - name: k8s-monitor-config
+          configMap:
+            name: k8s-monitor-config
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: k8s-monitor-rbac # here we can have namespace too
+subjects:
+  - kind: ServiceAccount
+    name: k8s-monitor # also we can have the namespace here too which refers to upper's metadata.namespace
+roleRef:
+  kind: Role
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: influx:cluster:viewer
+  labels:
+    rbac.authorization.k8s.io/aggregate-view-telegraf: "true"
+rules:
+  - apiGroups: [""]
+    resources: ["persistentvolumes", "nodes"]
+    verbs: ["get", "list"]
+
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: influx:telegraf
+aggregationRule:
+  clusterRoleSelectors:
+    - matchLabels:
+        rbac.authorization.k8s.io/aggregate-view-telegraf: "true"
+    - matchLabels:
+        rbac.authorization.k8s.io/aggregate-to-view: "true"
+rules: [] # Rules are automatically filled in by the controller manager.
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: influx:telegraf:viewer
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: influx:telegraf
+subjects:
+  - kind: ServiceAccount
+    name: k8s-monitor
+    namespace: "default"
