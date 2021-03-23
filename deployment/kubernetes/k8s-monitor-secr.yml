@@ -1,0 +1,11 @@
+apiVersion: v1
+
+kind: Secret
+metadata:
+  name: k8s-monitor-secrets
+type: Opaque
+stringData:
+  INFLUXDB_URL: http://136.159.209.214:8086
+  INFLUXDB_TOKEN: XoiQEGsvrh2YstBGhOWWC0UOL4c-b8GYtpo5xY_3LcLRA_mha2xex0AFiDOT-I39GW27rDc1JuEPNMwIEzmBqg==
+  INFLUXDB_ORG: uofc
+  INFLUXDB_BUCKET: general

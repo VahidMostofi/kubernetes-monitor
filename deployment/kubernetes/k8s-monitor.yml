@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 apiVersion: v1
 
 kind: ConfigMap
@@ -62,6 +63,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: bookstore
+=======
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+>>>>>>> aeefe547b89fc9e23dda7f0df16235d3464a10bd
   name: k8s-monitor-deployment
 spec:
   selector:
@@ -73,8 +79,11 @@ spec:
       labels:
         app: k8s-monitor
     spec:
+<<<<<<< HEAD
       serviceAccountName: monitorer
       automountServiceAccountToken: true
+=======
+>>>>>>> aeefe547b89fc9e23dda7f0df16235d3464a10bd
       containers:
         - image: vahidmostofi/telegraf-metrics-reporter:latest
           name: telegraf
@@ -85,31 +94,61 @@ spec:
               readOnly: true
           envFrom:
             - secretRef:
+<<<<<<< HEAD
                 name: influxdb-secrets
           env:
             - name: METRICS_MONITOR_K8S_NAMESPACE
               value: bookstore
+=======
+                name: k8s-monitor-secrets
+>>>>>>> aeefe547b89fc9e23dda7f0df16235d3464a10bd
       volumes:
         - name: k8s-monitor-config
           configMap:
             name: k8s-monitor-config
 ---
+<<<<<<< HEAD
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   namespace: bookstore
   name: influx:telegraf:viewer
+=======
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: k8s-monitor-rbac # here we can have namespace too
+subjects:
+  - kind: ServiceAccount
+    name: k8s-monitor # also we can have the namespace here too which refers to upper's metadata.namespace
+roleRef:
+  kind: Role
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: influx:cluster:viewer
+>>>>>>> aeefe547b89fc9e23dda7f0df16235d3464a10bd
   labels:
     rbac.authorization.k8s.io/aggregate-view-telegraf: "true"
 rules:
   - apiGroups: [""]
     resources: ["persistentvolumes", "nodes"]
     verbs: ["get", "list"]
+<<<<<<< HEAD
+=======
+
+>>>>>>> aeefe547b89fc9e23dda7f0df16235d3464a10bd
 ---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
+<<<<<<< HEAD
   namespace: bookstore
+=======
+>>>>>>> aeefe547b89fc9e23dda7f0df16235d3464a10bd
   name: influx:telegraf
 aggregationRule:
   clusterRoleSelectors:
@@ -122,7 +161,10 @@ rules: [] # Rules are automatically filled in by the controller manager.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
+<<<<<<< HEAD
   namespace: bookstore
+=======
+>>>>>>> aeefe547b89fc9e23dda7f0df16235d3464a10bd
   name: influx:telegraf:viewer
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -130,5 +172,10 @@ roleRef:
   name: influx:telegraf
 subjects:
   - kind: ServiceAccount
+<<<<<<< HEAD
     name: monitorer
     namespace: bookstore
+=======
+    name: k8s-monitor
+    namespace: "default"
+>>>>>>> aeefe547b89fc9e23dda7f0df16235d3464a10bd

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 telegraf-secr.yml
 all.yml
 k8s-monitor-secr.yml
 influxdb-secrets.yml
+=======
+telegraf-secr.yml
+>>>>>>> aeefe547b89fc9e23dda7f0df16235d3464a10bd
