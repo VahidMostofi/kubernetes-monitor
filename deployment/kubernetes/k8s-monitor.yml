@@ -3,7 +3,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: k8s-monitor-config
-  namespace: bookstore
+  namespace: default
 data:
   telegraf.conf: |+
     # Telegraf Configuration
@@ -54,14 +54,14 @@ data:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  namespace: bookstore
+  namespace: default
   name: monitorer
 automountServiceAccountToken: true
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: bookstore
+  namespace: default
   name: k8s-monitor-deployment
 spec:
   selector:
@@ -97,7 +97,7 @@ spec:
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  namespace: bookstore
+  namespace: default
   name: influx:telegraf:viewer
   labels:
     rbac.authorization.k8s.io/aggregate-view-telegraf: "true"
@@ -109,7 +109,7 @@ rules:
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  namespace: bookstore
+  namespace: default
   name: influx:telegraf
 aggregationRule:
   clusterRoleSelectors:
@@ -122,7 +122,7 @@ rules: [] # Rules are automatically filled in by the controller manager.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  namespace: bookstore
+  namespace: default
   name: influx:telegraf:viewer
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -131,4 +131,4 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: monitorer
-    namespace: bookstore
+    namespace: default
