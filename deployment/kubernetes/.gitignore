@@ -2,3 +2,4 @@ telegraf-secr.yml
 all.yml
 k8s-monitor-secr.yml
 influxdb-secrets.yml
+telegraf-secr.yml
