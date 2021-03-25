@@ -37,7 +37,7 @@ data:
     [[inputs.kube_inventory]]
       ## URL for the Kubernetes API
       url = "https://${KUBERNETES_SERVICE_HOST}"
-      namespace = "bookstore"
+      namespace = "default"
       insecure_skip_verify = true
 
     # Run executable as long-running input plugin
@@ -88,7 +88,7 @@ spec:
                 name: influxdb-secrets
           env:
             - name: METRICS_MONITOR_K8S_NAMESPACE
-              value: bookstore
+              value: default
       volumes:
         - name: k8s-monitor-config
           configMap:
